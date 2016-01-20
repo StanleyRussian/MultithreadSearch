@@ -1,0 +1,12 @@
+﻿Presenter is created first, he creates view and model, subscribe to event.
+Then application starts using link to form provided by presenter.
+
+	Main workflow is like this:
+User fills form and clicks search.
+Presenter reacts to event, accesing user's input with properties of form.
+Presenter calls form method to begin search.
+// When search ended  //  Or when user stops it  //
+Presenter access results using model properties
+and pass them to form usinf form's properties
+
+Why we need presenter to create the view anyway?
