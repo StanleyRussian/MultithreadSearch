@@ -42,7 +42,7 @@
             this.buttonSearchGo = new System.Windows.Forms.Button();
             this.buttonSearchStop = new System.Windows.Forms.Button();
             this.checkBoxSubdirs = new System.Windows.Forms.CheckBox();
-            this.label4 = new System.Windows.Forms.Label();
+            this.labelSearchState = new System.Windows.Forms.Label();
             this.buttonDetails = new System.Windows.Forms.Button();
             this.buttonBigIcons = new System.Windows.Forms.Button();
             this.buttonSmallIcons = new System.Windows.Forms.Button();
@@ -161,15 +161,15 @@
             this.checkBoxSubdirs.Text = "Подпапки";
             this.checkBoxSubdirs.UseVisualStyleBackColor = true;
             // 
-            // label4
+            // labelSearchState
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(337, 56);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(109, 13);
-            this.label4.TabIndex = 14;
-            this.label4.Text = "Результаты поиска:";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelSearchState.AutoSize = true;
+            this.labelSearchState.Location = new System.Drawing.Point(337, 56);
+            this.labelSearchState.Name = "labelSearchState";
+            this.labelSearchState.Size = new System.Drawing.Size(109, 13);
+            this.labelSearchState.TabIndex = 14;
+            this.labelSearchState.Text = "Результаты поиска:";
+            this.labelSearchState.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // buttonDetails
             // 
@@ -206,7 +206,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(771, 696);
-            this.Controls.Add(this.label4);
+            this.Controls.Add(this.labelSearchState);
             this.Controls.Add(this.buttonDetails);
             this.Controls.Add(this.buttonBigIcons);
             this.Controls.Add(this.buttonSmallIcons);
@@ -242,7 +242,7 @@
         private System.Windows.Forms.Button buttonSmallIcons;
         private System.Windows.Forms.Button buttonBigIcons;
         private System.Windows.Forms.Button buttonDetails;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label labelSearchState;
         private System.Windows.Forms.ColumnHeader columnName;
         private System.Windows.Forms.ColumnHeader columnPath;
         private System.Windows.Forms.ColumnHeader columnSize;

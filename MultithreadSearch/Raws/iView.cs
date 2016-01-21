@@ -5,7 +5,7 @@ namespace MultithreadSearch
 {
     interface iView
     {
-        event EventHandler SearchStarted;
+        event EventHandler SearchStart;
         event EventHandler SearchStop;
 
         bool SearchSubdirs
@@ -16,7 +16,8 @@ namespace MultithreadSearch
         { get; }
         string Volume
         { get; }
-
+        Label SearchState
+        { get; }
         ListView SearchResults
         { get; }
         ImageList IconsSmall
@@ -25,5 +26,6 @@ namespace MultithreadSearch
         { get; }
 
         void SetVolumes(string[] volumes);
+        void SetState(string state);
     }
 }

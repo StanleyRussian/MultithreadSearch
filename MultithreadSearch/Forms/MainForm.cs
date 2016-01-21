@@ -43,6 +43,11 @@ namespace MultithreadSearch
             private set;
         }
 
+        public Label SearchState
+        {
+            get { return labelSearchState; }
+        }
+
         public MainForm()
         {
             InitializeComponent();
@@ -59,7 +64,7 @@ namespace MultithreadSearch
             SearchResults.LargeImageList = IconsLarge;
         }
 
-        public event EventHandler SearchStarted;
+        public event EventHandler SearchStart;
         public event EventHandler SearchStop;
 
         private void buttonSmallIcons_Click(object sender, EventArgs e)
@@ -79,7 +84,7 @@ namespace MultithreadSearch
 
         private void buttonSearchGo_Click(object sender, EventArgs e)
         {
-            SearchStarted(this, null);
+            SearchStart(this, null);
         }
 
         private void buttonSearchStop_Click(object sender, EventArgs e)
@@ -91,6 +96,11 @@ namespace MultithreadSearch
         {
             comboBoxVolume.Items.Clear();
             comboBoxVolume.Items.AddRange(volumes);
+        }
+
+        public void SetState(string state)
+        {
+            labelSearchState.Text = state;
         }
     }
 }

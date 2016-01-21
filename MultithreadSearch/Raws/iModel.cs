@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace MultithreadSearch
@@ -10,5 +11,9 @@ namespace MultithreadSearch
 
         List<FileInfo> Files
         { get; }
+
+        event EventHandler SearchStarted;
+        event EventHandler SearchFinished;
+        event EventHandler SearchStopped;
     }
 }
