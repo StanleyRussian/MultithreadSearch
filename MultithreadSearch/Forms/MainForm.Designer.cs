@@ -1,6 +1,6 @@
 ﻿namespace MultithreadSearch
 {
-    partial class Form1
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,6 +29,10 @@
         private void InitializeComponent()
         {
             this.listViewSearchResults = new System.Windows.Forms.ListView();
+            this.columnName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnPath = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnDate = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -46,12 +50,37 @@
             // 
             // listViewSearchResults
             // 
+            this.listViewSearchResults.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listViewSearchResults.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnName,
+            this.columnPath,
+            this.columnSize,
+            this.columnDate});
             this.listViewSearchResults.Location = new System.Drawing.Point(12, 80);
             this.listViewSearchResults.Name = "listViewSearchResults";
             this.listViewSearchResults.Size = new System.Drawing.Size(747, 604);
             this.listViewSearchResults.TabIndex = 0;
             this.listViewSearchResults.UseCompatibleStateImageBehavior = false;
             this.listViewSearchResults.View = System.Windows.Forms.View.Details;
+            // 
+            // columnName
+            // 
+            this.columnName.Text = "Название";
+            // 
+            // columnPath
+            // 
+            this.columnPath.Text = "Путь";
+            // 
+            // columnSize
+            // 
+            this.columnSize.Text = "Размер (КБ)";
+            this.columnSize.Width = 84;
+            // 
+            // columnDate
+            // 
+            this.columnDate.Text = "Дата изменения";
             // 
             // label1
             // 
@@ -172,7 +201,7 @@
             this.buttonSmallIcons.UseVisualStyleBackColor = true;
             this.buttonSmallIcons.Click += new System.EventHandler(this.buttonSmallIcons_Click);
             // 
-            // Form1
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -191,7 +220,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.listViewSearchResults);
-            this.Name = "Form1";
+            this.Name = "MainForm";
             this.Text = "Form1";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -214,6 +243,10 @@
         private System.Windows.Forms.Button buttonBigIcons;
         private System.Windows.Forms.Button buttonDetails;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ColumnHeader columnName;
+        private System.Windows.Forms.ColumnHeader columnPath;
+        private System.Windows.Forms.ColumnHeader columnSize;
+        private System.Windows.Forms.ColumnHeader columnDate;
     }
 }
 

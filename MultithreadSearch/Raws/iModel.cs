@@ -1,12 +1,14 @@
-﻿namespace MultithreadSearch
+﻿using System.Collections.Generic;
+using System.IO;
+
+namespace MultithreadSearch
 {
     interface iModel
     {
-        void SearchByName(string str, string loc, bool subdirs);
-        void SearchInFiles(string str, string loc, bool subdirs);
+        void Search(string file, string str, string loc, bool subdirs);
         void StopSearch();
 
-        string[] FileNames
+        List<FileInfo> Files
         { get; }
     }
 }
