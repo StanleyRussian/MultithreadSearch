@@ -16,7 +16,6 @@ namespace MultithreadSearch
         iModel _model;
         Timer timer;
         ulong counter;
-        int index;
 
         public Presenter(iView view)
         {
@@ -27,32 +26,10 @@ namespace MultithreadSearch
 
             _model = new Model();
             _model.SearchFinished += _model_SearchFinished;
-            _model.UpdateResults += _model_UpdateResults;
 
             timer = new Timer();
             timer.Interval = 1;
             timer.Tick += Timer_Tick;
-        }
-
-        private void _model_UpdateResults(FileInfo file)
-        {
-            string[] columns = { file.Name, file.FullName, (file.Length / 1024).ToString(), file.CreationTime.ToString() };
-            var item = new ListViewItem(columns, index++);
-            if (_view.SearchResults.InvokeRequired)
-            {
-                AddItemDelegate additem = new AddItemDelegate(_view.SearchResults.Items.Add);
-                _view.SearchResults.Invoke(additem, item);
-                AddIconDelegate addicon = new AddIconDelegate(_view.IconsSmall.Images.Add);
-                _view.SearchResults.Invoke(addicon, Icon.ExtractAssociatedIcon(file.FullName));
-                addicon = new AddIconDelegate(_view.IconsLarge.Images.Add);
-                _view.SearchResults.Invoke(addicon, Icon.ExtractAssociatedIcon(file.FullName));
-            }
-            else
-            {
-                _view.SearchResults.Items.Add(item);
-                _view.IconsSmall.Images.Add(Icon.ExtractAssociatedIcon(file.FullName));
-                _view.IconsLarge.Images.Add(Icon.ExtractAssociatedIcon(file.FullName));
-            }
         }
 
         private void Timer_Tick(object sender, System.EventArgs e)
@@ -65,7 +42,7 @@ namespace MultithreadSearch
         private void _model_SearchFinished(object sender, System.EventArgs e)
         {
             timer.Stop();
-            //int index = 0;
+            int index = 0;
 
             if (_view.SearchResults.InvokeRequired)
             {
@@ -75,29 +52,29 @@ namespace MultithreadSearch
             else
                 _view.SearchState.Text = "Поиск завершён за " + counter + " миллисекунд, найдено: " + _model.Files.Count + " файлов";
 
-           // Task tsk = Task.Run(() =>
-           //{
-               //Parallel.ForEach(_model.Files, (file) =>
-               //{
-               //    string[] columns = { file.Name, file.FullName, (file.Length / 1024).ToString(), file.CreationTime.ToString() };
-               //    var item = new ListViewItem(columns, index++);
-               //    if (_view.SearchResults.InvokeRequired)
-               //    {
-               //        AddItemDelegate additem = new AddItemDelegate(_view.SearchResults.Items.Add);
-               //        _view.SearchResults.Invoke(additem, item);
-               //        AddIconDelegate addicon = new AddIconDelegate(_view.IconsSmall.Images.Add);
-               //        _view.SearchResults.Invoke(addicon, Icon.ExtractAssociatedIcon(file.FullName));
-               //        addicon = new AddIconDelegate(_view.IconsLarge.Images.Add);
-               //        _view.SearchResults.Invoke(addicon, Icon.ExtractAssociatedIcon(file.FullName));
-               //    }
-               //    else
-               //    {
-               //        _view.SearchResults.Items.Add(item);
-               //        _view.IconsSmall.Images.Add(Icon.ExtractAssociatedIcon(file.FullName));
-               //        _view.IconsLarge.Images.Add(Icon.ExtractAssociatedIcon(file.FullName));
-               //    }
-               //});
-           //});
+            Task tsk = Task.Run(() =>
+           {
+               Parallel.ForEach(_model.Files, (file) =>
+               {
+                   string[] columns = { file.Name, file.FullName, (file.Length / 1024).ToString(), file.CreationTime.ToString() };
+                   var item = new ListViewItem(columns, index++);
+                   if (_view.SearchResults.InvokeRequired)
+                   {
+                       AddItemDelegate additem = new AddItemDelegate(_view.SearchResults.Items.Add);
+                       _view.SearchResults.Invoke(additem, item);
+                       AddIconDelegate addicon = new AddIconDelegate(_view.IconsSmall.Images.Add);
+                       _view.SearchResults.Invoke(addicon, Icon.ExtractAssociatedIcon(file.FullName));
+                       addicon = new AddIconDelegate(_view.IconsLarge.Images.Add);
+                       _view.SearchResults.Invoke(addicon, Icon.ExtractAssociatedIcon(file.FullName));
+                   }
+                   else
+                   {
+                       _view.SearchResults.Items.Add(item);
+                       _view.IconsSmall.Images.Add(Icon.ExtractAssociatedIcon(file.FullName));
+                       _view.IconsLarge.Images.Add(Icon.ExtractAssociatedIcon(file.FullName));
+                   }
+               });
+           });
         }
 
         private void _view_SearchStop(object sender, System.EventArgs e)
@@ -116,11 +93,8 @@ namespace MultithreadSearch
             if (_view.SearchFilename != "" || _view.SearchString != "" && _view.Volume != "")
             {
                 counter = 0;
-                index = 0;
                 timer.Start();
-                //_view.SearchState.Text = "Идёт поиск";
                 _view.SearchResults.Items.Clear();
-
                 _view.IconsSmall.Images.Clear();
                 _view.IconsLarge.Images.Clear();
 

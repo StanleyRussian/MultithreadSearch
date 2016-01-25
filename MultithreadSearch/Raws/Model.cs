@@ -65,9 +65,7 @@ namespace MultithreadSearch
                     {
                         if (line.Contains(str))
                         {
-                            FileInfo f = new FileInfo(s);
-                            files.Add(f);
-                            UpdateResults(f);
+                            files.Add(new FileInfo(s));
                             break;
                         }
                     }
@@ -91,9 +89,7 @@ namespace MultithreadSearch
                 string[] filenames = Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
                 foreach (string s in filenames)
                 {
-                    FileInfo f = new FileInfo(s);
-                    files.Add(f);
-                    UpdateResults(f);
+                    files.Add(new FileInfo(s));
                 }
                 if (subdirs)
                     foreach (var directory in Directory.GetDirectories(path))
