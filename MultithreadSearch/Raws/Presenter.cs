@@ -25,9 +25,7 @@ namespace MultithreadSearch
             _view.SetVolumes(Directory.GetLogicalDrives());
 
             _model = new Model();
-            //_model.SearchStarted += _model_SearchStarted;
             _model.SearchFinished += _model_SearchFinished;
-            _model.SearchStopped += _model_SearchStopped;
 
             timer = new Timer();
             timer.Interval = 1;
@@ -37,16 +35,8 @@ namespace MultithreadSearch
         private void Timer_Tick(object sender, System.EventArgs e)
         {
             counter++;
-        }
-
-        private void _model_SearchStopped(object sender, System.EventArgs e)
-        {
-            timer.Stop();
-            if (_view.SearchResults.InvokeRequired)
-            {
-                SetStateDelegate setstate = new SetStateDelegate(_view.SetState);
-                _view.SearchResults.Invoke(setstate, "Поиск остановлен на " + counter + " миллисекунде");
-            }
+            if (counter % 10 == 0)
+                _view.SearchState.Text = "Идет поиск. Время: " + counter + " миллисекунд";
         }
 
         private void _model_SearchFinished(object sender, System.EventArgs e)
@@ -87,25 +77,24 @@ namespace MultithreadSearch
            });
         }
 
-        private void _model_SearchStarted(object sender, System.EventArgs e)
-        {
-
-        }
-
         private void _view_SearchStop(object sender, System.EventArgs e)
         {
             _model.StopSearch();
+            timer.Stop();
+            if (_view.SearchResults.InvokeRequired)
+            {
+                SetStateDelegate setstate = new SetStateDelegate(_view.SetState);
+                _view.SearchResults.Invoke(setstate, "Поиск остановлен на " + counter + " миллисекунде");
+            }
         }
 
         private void _view_SearchStart(object sender, System.EventArgs e)
         {
             if (_view.SearchFilename != "" || _view.SearchString != "" && _view.Volume != "")
             {
-                _view.SearchState.Text = "Идёт поиск";
-                _view.SearchResults.Items.Clear();
                 counter = 0;
                 timer.Start();
-
+                _view.SearchResults.Items.Clear();
                 _view.IconsSmall.Images.Clear();
                 _view.IconsLarge.Images.Clear();
 
