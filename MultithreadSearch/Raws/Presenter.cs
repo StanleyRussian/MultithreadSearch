@@ -25,7 +25,6 @@ namespace MultithreadSearch
             _view.SetVolumes(Directory.GetLogicalDrives());
 
             _model = new Model();
-            //_model.SearchStarted += _model_SearchStarted;
             _model.SearchFinished += _model_SearchFinished;
             _model.SearchStopped += _model_SearchStopped;
 
