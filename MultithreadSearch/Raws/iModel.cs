@@ -13,6 +13,6 @@ namespace MultithreadSearch
         { get; }
 
         event EventHandler SearchFinished;
-        event EventHandler SearchStopped;
     }
+    delegate void FileDlg(FileInfo file);
 }
