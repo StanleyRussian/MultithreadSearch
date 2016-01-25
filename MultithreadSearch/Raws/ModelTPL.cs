@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MultithreadSearch
 {
-    class Model : iModel
+    class Model_TPL: iModel
     {
         public List<FileInfo> Files
         {

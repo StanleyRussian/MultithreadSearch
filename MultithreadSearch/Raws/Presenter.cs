@@ -17,14 +17,14 @@ namespace MultithreadSearch
         Timer timer;
         ulong counter;
 
-        public Presenter(iView view)
+        public Presenter(iView view, iModel model)
         {
             _view = view;
             _view.SearchStart += _view_SearchStart;
             _view.SearchStop += _view_SearchStop;
             _view.SetVolumes(Directory.GetLogicalDrives());
 
-            _model = new Model();
+            _model = model;
             _model.SearchFinished += _model_SearchFinished;
 
             timer = new Timer();

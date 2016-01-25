@@ -54,7 +54,7 @@
     </Compile>
     <Compile Include="Raws\iModel.cs" />
     <Compile Include="Raws\iView.cs" />
-    <Compile Include="Raws\Model.cs" />
+    <Compile Include="Raws\ModelTPL.cs" />
     <Compile Include="Raws\Presenter.cs" />
     <Compile Include="Raws\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
