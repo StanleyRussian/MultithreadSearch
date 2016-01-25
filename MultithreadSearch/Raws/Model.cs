@@ -15,6 +15,7 @@ namespace MultithreadSearch
         }
 
         public event EventHandler SearchFinished;
+        public event FileDlg UpdateResults;
 
         Task<List<FileInfo>> tsk;
 
@@ -64,7 +65,9 @@ namespace MultithreadSearch
                     {
                         if (line.Contains(str))
                         {
-                            files.Add(new FileInfo(s));
+                            FileInfo f = new FileInfo(s);
+                            files.Add(f);
+                            UpdateResults(f);
                             break;
                         }
                     }
@@ -88,7 +91,9 @@ namespace MultithreadSearch
                 string[] filenames = Directory.GetFiles(path, pattern, SearchOption.TopDirectoryOnly);
                 foreach (string s in filenames)
                 {
-                    files.Add(new FileInfo(s));
+                    FileInfo f = new FileInfo(s);
+                    files.Add(f);
+                    UpdateResults(f);
                 }
                 if (subdirs)
                     foreach (var directory in Directory.GetDirectories(path))
