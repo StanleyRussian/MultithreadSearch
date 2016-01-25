@@ -25,7 +25,7 @@ namespace MultithreadSearch
             _view.SetVolumes(Directory.GetLogicalDrives());
 
             _model = new Model();
-            _model.SearchStarted += _model_SearchStarted;
+            //_model.SearchStarted += _model_SearchStarted;
             _model.SearchFinished += _model_SearchFinished;
             _model.SearchStopped += _model_SearchStopped;
 
@@ -47,34 +47,12 @@ namespace MultithreadSearch
                 SetStateDelegate setstate = new SetStateDelegate(_view.SetState);
                 _view.SearchResults.Invoke(setstate, "Поиск остановлен на " + counter + " миллисекунде");
             }
-            counter = 0;
         }
 
         private void _model_SearchFinished(object sender, System.EventArgs e)
         {
             timer.Stop();
             int index = 0;
-
-            Parallel.ForEach(_model.Files, (file) =>
-            {
-                string[] columns = { file.Name, file.FullName, (file.Length / 1024).ToString(), file.CreationTime.ToString() };
-                var item = new ListViewItem(columns, index++);
-                if (_view.SearchResults.InvokeRequired)
-                {
-                    AddItemDelegate additem = new AddItemDelegate(_view.SearchResults.Items.Add);
-                    _view.SearchResults.Invoke(additem, item);
-                    AddIconDelegate addicon = new AddIconDelegate(_view.IconsSmall.Images.Add);
-                    _view.SearchResults.Invoke(addicon, Icon.ExtractAssociatedIcon(file.FullName));
-                    addicon = new AddIconDelegate(_view.IconsLarge.Images.Add);
-                    _view.SearchResults.Invoke(addicon, Icon.ExtractAssociatedIcon(file.FullName));
-                }
-                else
-                {
-                    _view.SearchResults.Items.Add(item);
-                    _view.IconsSmall.Images.Add(Icon.ExtractAssociatedIcon(file.FullName));
-                    _view.IconsLarge.Images.Add(Icon.ExtractAssociatedIcon(file.FullName));
-                }
-            });
 
             if (_view.SearchResults.InvokeRequired)
             {
@@ -83,14 +61,35 @@ namespace MultithreadSearch
             }
             else
                 _view.SearchState.Text = "Поиск завершён за " + counter + " миллисекунд, найдено: " + _model.Files.Count + " файлов";
+
+            Task tsk = Task.Run(() =>
+           {
+               Parallel.ForEach(_model.Files, (file) =>
+               {
+                   string[] columns = { file.Name, file.FullName, (file.Length / 1024).ToString(), file.CreationTime.ToString() };
+                   var item = new ListViewItem(columns, index++);
+                   if (_view.SearchResults.InvokeRequired)
+                   {
+                       AddItemDelegate additem = new AddItemDelegate(_view.SearchResults.Items.Add);
+                       _view.SearchResults.Invoke(additem, item);
+                       AddIconDelegate addicon = new AddIconDelegate(_view.IconsSmall.Images.Add);
+                       _view.SearchResults.Invoke(addicon, Icon.ExtractAssociatedIcon(file.FullName));
+                       addicon = new AddIconDelegate(_view.IconsLarge.Images.Add);
+                       _view.SearchResults.Invoke(addicon, Icon.ExtractAssociatedIcon(file.FullName));
+                   }
+                   else
+                   {
+                       _view.SearchResults.Items.Add(item);
+                       _view.IconsSmall.Images.Add(Icon.ExtractAssociatedIcon(file.FullName));
+                       _view.IconsLarge.Images.Add(Icon.ExtractAssociatedIcon(file.FullName));
+                   }
+               });
+           });
         }
 
         private void _model_SearchStarted(object sender, System.EventArgs e)
         {
-            _view.SearchState.Text = "Идёт поиск";
-            _view.SearchResults.Items.Clear();
-            counter = 0;
-            timer.Start();
+
         }
 
         private void _view_SearchStop(object sender, System.EventArgs e)
@@ -102,6 +101,11 @@ namespace MultithreadSearch
         {
             if (_view.SearchFilename != "" || _view.SearchString != "" && _view.Volume != "")
             {
+                _view.SearchState.Text = "Идёт поиск";
+                _view.SearchResults.Items.Clear();
+                counter = 0;
+                timer.Start();
+
                 _view.IconsSmall.Images.Clear();
                 _view.IconsLarge.Images.Clear();
 

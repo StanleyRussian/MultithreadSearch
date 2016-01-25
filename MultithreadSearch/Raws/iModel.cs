@@ -12,7 +12,6 @@ namespace MultithreadSearch
         List<FileInfo> Files
         { get; }
 
-        event EventHandler SearchStarted;
         event EventHandler SearchFinished;
         event EventHandler SearchStopped;
     }

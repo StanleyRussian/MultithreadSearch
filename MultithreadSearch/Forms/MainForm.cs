@@ -51,7 +51,6 @@ namespace MultithreadSearch
         public MainForm()
         {
             InitializeComponent();
-            new Presenter(this);
 
             IconsSmall = new ImageList();
             IconsLarge = new ImageList();

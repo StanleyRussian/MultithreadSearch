@@ -13,7 +13,9 @@ namespace MultithreadSearch
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            MainForm mf = new MainForm();
+            Presenter p = new Presenter(mf);
+            Application.Run(mf);
         }
     }
 }
