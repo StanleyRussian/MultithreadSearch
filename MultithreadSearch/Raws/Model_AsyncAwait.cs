@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MultithreadSearch
 {
-    class Model_Async : iModel
+    class Model_AsyncAwait : iModel
     {
         public List<FileInfo> Files
         {
@@ -14,44 +18,48 @@ namespace MultithreadSearch
 
         public event EventHandler SearchFinished;
 
-        delegate List<FileInfo> SearchDlg(string path, string pattern_filename, bool subdirs);
-        private volatile bool _shouldStop;
-        SearchDlg search_dlg;
-        IAsyncResult resultObj;
+        CancellationTokenSource tokenSource = new CancellationTokenSource();
+        CancellationToken token;
+        Task tsk;
 
         public void Search(string file, string str, string loc, bool subdirs)
         {
-            _shouldStop = false;
+            tokenSource = new CancellationTokenSource();
+            token = tokenSource.Token;
 
-            if (str != "")
-            {
-                search_dlg = new SearchDlg(SearchInFiles);
-                search_dlg.BeginInvoke(loc, str, subdirs, AsyncCallbackFinished, null);
-            }
-            else
-            {
-                search_dlg = new SearchDlg(SearchForFiles);
-                search_dlg.BeginInvoke(loc, file, subdirs, AsyncCallbackFinished, null);
-            }
-
+            SearchLauncher(file, str, loc, subdirs).GetAwaiter();
         }
 
         public void StopSearch()
         {
-            _shouldStop = true;
+            try
+            {
+                tokenSource.Cancel();
+                tokenSource.Dispose();
+            }
+            catch (Exception ex) { }
         }
 
-        public void AsyncCallbackFinished ( IAsyncResult ar)
+        private async Task SearchLauncher (string file, string str, string loc, bool subdirs)
         {
-            Files = search_dlg.EndInvoke(ar);
-            SearchFinished(this, null);
+            if (str != "")
+                Files = await Task.Run(() => SearchInFiles(loc, str, subdirs, token));
+            else
+                Files = await Task.Run(() => SearchForFiles(loc, file, subdirs, token));
+
+            await Task.Run(() =>
+            {
+                SearchFinished(this, null);
+            });
+            
         }
 
-        private List<FileInfo> SearchInFiles(string path, string str, bool subdirs)
+        private List<FileInfo> SearchInFiles(string path, string str, bool subdirs, CancellationToken token)
         {
             var files = new List<FileInfo>();
-            if (_shouldStop)
+            if (token.IsCancellationRequested)
                 return files;
+
             try
             {
                 string[] filenames = Directory.GetFiles(path, "*.txt", SearchOption.TopDirectoryOnly);
@@ -68,17 +76,17 @@ namespace MultithreadSearch
                 }
                 if (subdirs)
                     foreach (var directory in Directory.GetDirectories(path))
-                        files.AddRange(SearchInFiles(directory, str, subdirs));
+                        files.AddRange(SearchInFiles(directory, str, subdirs, token));
             }
             catch (UnauthorizedAccessException) { }
 
             return files;
         }
 
-        private List<FileInfo> SearchForFiles(string path, string pattern, bool subdirs)
+        private List<FileInfo> SearchForFiles(string path, string pattern, bool subdirs, CancellationToken token)
         {
             var files = new List<FileInfo>();
-            if (_shouldStop)
+            if (token.IsCancellationRequested)
                 return files;
             try
             {
@@ -89,12 +97,11 @@ namespace MultithreadSearch
                 }
                 if (subdirs)
                     foreach (var directory in Directory.GetDirectories(path))
-                        files.AddRange(SearchForFiles(directory, pattern, subdirs));
+                        files.AddRange(SearchForFiles(directory, pattern, subdirs, token));
             }
             catch (UnauthorizedAccessException) { }
 
             return files;
         }
-
     }
 }

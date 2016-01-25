@@ -55,6 +55,7 @@
     <Compile Include="Raws\iModel.cs" />
     <Compile Include="Raws\iView.cs" />
     <Compile Include="Raws\Model_Async.cs" />
+    <Compile Include="Raws\Model_AsyncAwait.cs" />
     <Compile Include="Raws\Model_Threading.cs" />
     <Compile Include="Raws\Model_TPL.cs" />
     <Compile Include="Raws\Presenter.cs" />

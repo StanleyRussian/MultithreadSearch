@@ -16,7 +16,8 @@ namespace MultithreadSearch
             iView f = new MainForm();
             //iModel m = new Model_Async();
             //iModel m = new Model_Threading();
-            iModel m = new Model_TPL();
+            //iModel m = new Model_TPL();
+            iModel m = new Model_AsyncAwait();
             Presenter p = new Presenter(f, m);
             Application.Run((Form)f);
         }

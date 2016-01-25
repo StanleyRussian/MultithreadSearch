@@ -86,7 +86,7 @@ namespace MultithreadSearch
 
         private void _view_SearchStart(object sender, System.EventArgs e)
         {
-            if (_view.SearchFilename != "" || _view.SearchString != "" && _view.Volume != "")
+            if ((_view.SearchFilename != "" || _view.SearchString != "") && _view.Volume != "")
             {
                 counter = 0;
                 timer.Start();
