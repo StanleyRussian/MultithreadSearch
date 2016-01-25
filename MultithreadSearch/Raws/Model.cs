@@ -15,7 +15,6 @@ namespace MultithreadSearch
         }
 
         public event EventHandler SearchFinished;
-        public event FileDlg UpdateResults;
 
         Task<List<FileInfo>> tsk;
 
