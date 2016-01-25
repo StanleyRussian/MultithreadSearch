@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -52,29 +51,26 @@ namespace MultithreadSearch
             else
                 _view.SearchState.Text = "Поиск завершён за " + counter + " миллисекунд, найдено: " + _model.Files.Count + " файлов";
 
-            Task tsk = Task.Run(() =>
-           {
-               Parallel.ForEach(_model.Files, (file) =>
-               {
-                   string[] columns = { file.Name, file.FullName, (file.Length / 1024).ToString(), file.CreationTime.ToString() };
-                   var item = new ListViewItem(columns, index++);
-                   if (_view.SearchResults.InvokeRequired)
-                   {
-                       AddItemDelegate additem = new AddItemDelegate(_view.SearchResults.Items.Add);
-                       _view.SearchResults.Invoke(additem, item);
-                       AddIconDelegate addicon = new AddIconDelegate(_view.IconsSmall.Images.Add);
-                       _view.SearchResults.Invoke(addicon, Icon.ExtractAssociatedIcon(file.FullName));
-                       addicon = new AddIconDelegate(_view.IconsLarge.Images.Add);
-                       _view.SearchResults.Invoke(addicon, Icon.ExtractAssociatedIcon(file.FullName));
-                   }
-                   else
-                   {
-                       _view.SearchResults.Items.Add(item);
-                       _view.IconsSmall.Images.Add(Icon.ExtractAssociatedIcon(file.FullName));
-                       _view.IconsLarge.Images.Add(Icon.ExtractAssociatedIcon(file.FullName));
-                   }
-               });
-           });
+            Parallel.ForEach(_model.Files, (file) =>
+            {
+                string[] columns = { file.Name, file.FullName, (file.Length / 1024).ToString(), file.CreationTime.ToString() };
+                var item = new ListViewItem(columns, index++);
+                if (_view.SearchResults.InvokeRequired)
+                {
+                    AddItemDelegate additem = new AddItemDelegate(_view.SearchResults.Items.Add);
+                    _view.SearchResults.Invoke(additem, item);
+                    AddIconDelegate addicon = new AddIconDelegate(_view.IconsSmall.Images.Add);
+                    _view.SearchResults.Invoke(addicon, Icon.ExtractAssociatedIcon(file.FullName));
+                    addicon = new AddIconDelegate(_view.IconsLarge.Images.Add);
+                    _view.SearchResults.Invoke(addicon, Icon.ExtractAssociatedIcon(file.FullName));
+                }
+                else
+                {
+                    _view.SearchResults.Items.Add(item);
+                    _view.IconsSmall.Images.Add(Icon.ExtractAssociatedIcon(file.FullName));
+                    _view.IconsLarge.Images.Add(Icon.ExtractAssociatedIcon(file.FullName));
+                }
+            });
         }
 
         private void _view_SearchStop(object sender, System.EventArgs e)

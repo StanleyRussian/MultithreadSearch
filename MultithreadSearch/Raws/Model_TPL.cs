@@ -29,7 +29,7 @@ namespace MultithreadSearch
             if (str != "")
                 tsk = Task.Run(() => SearchInFiles(loc, str, subdirs, token));
             else
-                tsk = Task.Run(() => GetFiles(loc, file, subdirs, token));
+                tsk = Task.Run(() => SearchForFiles(loc, file, subdirs, token));
 
             tsk.ContinueWith((x) =>
             {
@@ -78,7 +78,7 @@ namespace MultithreadSearch
             return files;
         }
 
-        private List<FileInfo> GetFiles(string path, string pattern, bool subdirs, CancellationToken token)
+        private List<FileInfo> SearchForFiles(string path, string pattern, bool subdirs, CancellationToken token)
         {
             var files = new List<FileInfo>();
             if (token.IsCancellationRequested)
@@ -92,7 +92,7 @@ namespace MultithreadSearch
                 }
                 if (subdirs)
                     foreach (var directory in Directory.GetDirectories(path))
-                        files.AddRange(GetFiles(directory, pattern, subdirs, token));
+                        files.AddRange(SearchForFiles(directory, pattern, subdirs, token));
             }
             catch (UnauthorizedAccessException) { }
 
