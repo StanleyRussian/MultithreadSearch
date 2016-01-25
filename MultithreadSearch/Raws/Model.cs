@@ -15,7 +15,6 @@ namespace MultithreadSearch
         }
 
         public event EventHandler SearchFinished;
-        public event EventHandler SearchStopped;
 
         Task<List<FileInfo>> tsk;
 
@@ -46,7 +45,6 @@ namespace MultithreadSearch
                 tokenSource.Cancel();
                 tsk.Wait();
                 tokenSource.Dispose();
-                SearchStopped(this, null);
             }
             catch (Exception ex) { }
         }
