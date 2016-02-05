@@ -15,6 +15,7 @@ namespace MultithreadSearch
         }
 
         public event EventHandler SearchFinished;
+        public event FileListDlg Found;
 
         Task<List<FileInfo>> tsk;
 
@@ -43,7 +44,6 @@ namespace MultithreadSearch
             try
             {
                 tokenSource.Cancel();
-                tsk.Wait();
                 tokenSource.Dispose();
             }
             catch (Exception ex) { }
@@ -75,6 +75,7 @@ namespace MultithreadSearch
             }
             catch (UnauthorizedAccessException) { }
 
+            Found(files);
             return files;
         }
 
@@ -96,6 +97,7 @@ namespace MultithreadSearch
             }
             catch (UnauthorizedAccessException) { }
 
+            Found(files);
             return files;
         }
     }

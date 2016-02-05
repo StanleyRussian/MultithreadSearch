@@ -17,6 +17,7 @@ namespace MultithreadSearch
         }
 
         public event EventHandler SearchFinished;
+        public event FileListDlg Found;
 
         CancellationTokenSource tokenSource = new CancellationTokenSource();
         CancellationToken token;
@@ -80,6 +81,7 @@ namespace MultithreadSearch
             }
             catch (UnauthorizedAccessException) { }
 
+            Found(files);
             return files;
         }
 
@@ -101,6 +103,7 @@ namespace MultithreadSearch
             }
             catch (UnauthorizedAccessException) { }
 
+            Found(files);
             return files;
         }
     }

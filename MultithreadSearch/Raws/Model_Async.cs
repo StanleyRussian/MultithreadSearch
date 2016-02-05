@@ -13,6 +13,7 @@ namespace MultithreadSearch
         }
 
         public event EventHandler SearchFinished;
+        public event FileListDlg Found;
 
         delegate List<FileInfo> SearchDlg(string path, string pattern_filename, bool subdirs);
         private volatile bool _shouldStop;
@@ -72,6 +73,7 @@ namespace MultithreadSearch
             }
             catch (UnauthorizedAccessException) { }
 
+            Found(files);
             return files;
         }
 
@@ -93,6 +95,7 @@ namespace MultithreadSearch
             }
             catch (UnauthorizedAccessException) { }
 
+            Found(files);
             return files;
         }
 

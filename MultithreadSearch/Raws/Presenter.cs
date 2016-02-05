@@ -15,6 +15,7 @@ namespace MultithreadSearch
         iModel _model;
         Timer timer;
         ulong counter;
+        int index = 0;
 
         public Presenter(iView view, iModel model)
         {
@@ -25,33 +26,16 @@ namespace MultithreadSearch
 
             _model = model;
             _model.SearchFinished += _model_SearchFinished;
+            _model.Found += _model_Found;
 
             timer = new Timer();
             timer.Interval = 1;
             timer.Tick += Timer_Tick;
         }
 
-        private void Timer_Tick(object sender, System.EventArgs e)
+        private void _model_Found(System.Collections.Generic.List<FileInfo> foundfiles)
         {
-            counter++;
-            if (counter % 10 == 0)
-                _view.SearchState.Text = "Идет поиск. Время: " + counter + " миллисекунд";
-        }
-
-        private void _model_SearchFinished(object sender, System.EventArgs e)
-        {
-            timer.Stop();
-            int index = 0;
-
-            if (_view.SearchResults.InvokeRequired)
-            {
-                SetStateDelegate setstate = new SetStateDelegate(_view.SetState);
-                _view.SearchResults.Invoke(setstate, "Поиск завершён за " + counter + " миллисекунд, найдено: " + _model.Files.Count + " файлов");
-            }
-            else
-                _view.SearchState.Text = "Поиск завершён за " + counter + " миллисекунд, найдено: " + _model.Files.Count + " файлов";
-
-            Parallel.ForEach(_model.Files, (file) =>
+            foreach (var file in foundfiles)
             {
                 string[] columns = { file.Name, file.FullName, (file.Length / 1024).ToString(), file.CreationTime.ToString() };
                 var item = new ListViewItem(columns, index++);
@@ -70,7 +54,28 @@ namespace MultithreadSearch
                     _view.IconsSmall.Images.Add(Icon.ExtractAssociatedIcon(file.FullName));
                     _view.IconsLarge.Images.Add(Icon.ExtractAssociatedIcon(file.FullName));
                 }
-            });
+            }
+        }
+
+        private void Timer_Tick(object sender, System.EventArgs e)
+        {
+            counter++;
+            if (counter % 10 == 0)
+                _view.SearchState.Text = "Идет поиск. Время: " + counter + " миллисекунд";
+        }
+
+        private void _model_SearchFinished(object sender, System.EventArgs e)
+        {
+            timer.Stop();
+            index = 0;
+
+            if (_view.SearchResults.InvokeRequired)
+            {
+                SetStateDelegate setstate = new SetStateDelegate(_view.SetState);
+                _view.SearchResults.Invoke(setstate, "Поиск завершён за " + counter + " миллисекунд, найдено: " + _model.Files.Count + " файлов");
+            }
+            else
+                _view.SearchState.Text = "Поиск завершён за " + counter + " миллисекунд, найдено: " + _model.Files.Count + " файлов";
         }
 
         private void _view_SearchStop(object sender, System.EventArgs e)
@@ -82,6 +87,8 @@ namespace MultithreadSearch
                 SetStateDelegate setstate = new SetStateDelegate(_view.SetState);
                 _view.SearchResults.Invoke(setstate, "Поиск остановлен на " + counter + " миллисекунде");
             }
+            else
+                _view.SearchState.Text = "Поиск остановлен на " + counter + " миллисекунде";
         }
 
         private void _view_SearchStart(object sender, System.EventArgs e)
@@ -89,6 +96,7 @@ namespace MultithreadSearch
             if ((_view.SearchFilename != "" || _view.SearchString != "") && _view.Volume != "")
             {
                 counter = 0;
+                index = 0;
                 timer.Start();
                 _view.SearchResults.Items.Clear();
                 _view.IconsSmall.Images.Clear();

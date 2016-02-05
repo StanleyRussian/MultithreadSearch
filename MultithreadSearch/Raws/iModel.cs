@@ -4,6 +4,8 @@ using System.IO;
 
 namespace MultithreadSearch
 {
+    public delegate void FileListDlg(List<FileInfo> arg);
+
     interface iModel
     {
         void Search(string file, string str, string loc, bool subdirs);
@@ -13,6 +15,7 @@ namespace MultithreadSearch
         { get; }
 
         event EventHandler SearchFinished;
+        event FileListDlg Found;
     }
     delegate void FileDlg(FileInfo file);
 }

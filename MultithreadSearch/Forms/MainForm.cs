@@ -61,6 +61,10 @@ namespace MultithreadSearch
 
             SearchResults.SmallImageList = IconsSmall;
             SearchResults.LargeImageList = IconsLarge;
+
+            System.Reflection.PropertyInfo controlProperty = typeof(System.Windows.Forms.Control)
+                .GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            controlProperty.SetValue(listViewSearchResults, true, null);
         }
 
         public event EventHandler SearchStart;

@@ -13,6 +13,7 @@ namespace MultithreadSearch
             private set;
         }
         public event EventHandler SearchFinished;
+        public event FileListDlg Found;
 
         Thread trd;
         private volatile bool _shouldStop;
@@ -64,6 +65,7 @@ namespace MultithreadSearch
             }
             catch (UnauthorizedAccessException) { }
 
+            Found(files);
             return files;
         }
 
@@ -85,6 +87,7 @@ namespace MultithreadSearch
             }
             catch (UnauthorizedAccessException) { }
 
+            Found(files);
             return files;
         }
     }
